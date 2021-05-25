@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Site</title>
+</head>
+
+<body>
+    <button onclick="get()">Get</button>
+    <button onclick="add()">Add</button>
+    <button onclick="random()">Random</button><br>
+    <div>
+        <p>Min value: <input type="text" id="min"></p>
+        <p>Max value: <input type="text" id="max"></p>
+        <button onclick="custom_random()">Custom random</button>
+    </div>
+    <h1 id="value"></h1>
+
+
+</body>
+
+<script>
+    async function get() {
+        let response = await fetch("/counter/show")
+        let text = await response.text()
+        document.getElementById("value").innerHTML = JSON.parse(text).text
+    }
+
+    async function add() {
+        let response = await fetch("/counter/add", { method: 'POST' })
+        let text = await response.text()
+        document.getElementById("value").innerHTML = JSON.parse(text).text
+    }
+
+    async function random() {
+        let response = await fetch("/random", { method: 'POST' })
+        let text = await response.text()
+        document.getElementById("value").innerHTML = JSON.parse(text).text
+    }
+
+    async function custom_random() {
+        const minValue = document.getElementById("min").value
+        const maxValue = document.getElementById("max").value
+        const payload = {min: minValue, max: maxValue}
+
+        let response = await fetch("/custom_random",
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+        let text = await response.text()
+        document.getElementById("value").innerHTML = JSON.parse(text).text
+    }
+</script>
+
+
+</html>
